@@ -1,0 +1,11 @@
+div, p, h1, h2, h3, h4, h5, h6, input, .text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6, .caption, .text-subtitle-1, .text-subtitle-2, .text-body-1, .text-body-2 {
+  font-family: iryekan !important;
+}
+
+.v-btn {
+  letter-spacing: 0;
+}
+
+.text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6 {
+  line-height: unset !important;
+}

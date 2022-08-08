@@ -1,0 +1,222 @@
+<template>
+  <div class="main-base" :class="{ 'sidebar': appliedConfigMode === 'sidebar' }">
+    <div v-if="loading" class="d-flex flex-column align-center justify-center" style="position: fixed; top: 0; left: 0; bottom: 0; right: 0;">
+      <v-img src="../../assets/img/logo.png" class="flex-grow-0" contain width="60" height="60" />
+      <v-progress-circular indeterminate color="primary" size="24" width="2" class="mt-4" />
+    </div>
+    <template v-else>
+
+      <component
+        v-if="!$route.meta.hideNavbar"
+        :is="appliedConfigMode === 'appbar' ? 'main-app-bar' : 'main-side-bar'"
+        :toolbar-items="permittedToolbars"
+        :extra-toolbar-items="currentComponent && currentComponent.toolbars ? currentComponent.toolbars : []"
+        :color="config.color"
+        :height="config.appBarHeight"
+        :dark="config.isDark"
+        :sticky="config.stickyAppBar"
+      />
+
+      <router-view
+        class="main-content"
+        :key="$route.path"
+        :style="{
+          'padding-top': `${contentTopPadding}px`
+        }"
+      />
+
+    </template>
+  </div>
+</template>
+
+<script>
+
+import MainAppBar from './components/main-app-bar.vue';
+import MainSideBar from './components/main-side-bar.vue';
+
+import { Config } from '../../global/config';
+import { AuthService } from '../../api/AuthApi';
+
+export default {
+  name: 'MainBase',
+  components: {
+    'main-app-bar': MainAppBar,
+    'main-side-bar': MainSideBar
+  },
+  data: () => ({
+    loading: false,
+    error: false,
+    code: 1,
+    config: {
+      mode: Config.baseLayout.defaultBarMode,
+      appBarHeight: Config.baseLayout.appBarHeight,
+      color: Config.baseLayout.barColor,
+      isDark: Config.baseLayout.isBarColorDark,
+      stickyAppBar: Config.baseLayout.isAppBarSticky
+    },
+    toolbars: [
+      { groupTitle: 'Management', groupIcon: 'mdi-office-building-cog' , children: [
+        { title: 'تنظیمات ثبت‌نام لایو', icon: 'mdi-cog-play', path: '/settings/live-registration' },
+        { title: 'کاربران', icon: 'mdi-account', path: '/users', permissions: ['admin.user.list'] },
+        { title: 'بلیط‌های ورود', icon: 'mdi-ticket', path: '/authorization-tokens', permissions: ['admin.authorization-token.list'] },
+        { title: 'سطوح دسترسی', icon: 'mdi-ticket', path: '/authorization-roles', permissions: ['admin.authorization-role.list'] }
+      ]}
+    ]
+  }),
+  computed: {
+    currentComponent() {
+      return this.code && this.$route?.matched?.[this.$route.matched.length - 1]?.instances?.default;
+    },
+    appliedConfigMode() {
+      if (this.config.mode === 'appbar') return 'appbar';
+      if (this.$isMobile || this.$isTablet) return 'appbar';
+
+      return this.config.mode;
+
+    },
+    contentTopPadding() {
+
+      const bl = Config.baseLayout;
+
+      if (this.appliedConfigMode !== 'appbar') return bl.mainContentAreaTopSpacing;
+      if (!bl.isAppBarSticky) return bl.mainContentAreaTopSpacing;
+
+      if (!this.toolbars || this.toolbars.length === 0) {
+        return bl.appBarHeight + bl.mainContentAreaTopSpacing;
+      }
+
+      if (!this.$isMobile) {
+        return bl.appBarHeight + bl.appBarToolbarHeight + bl.mainContentAreaTopSpacing;
+      }
+
+      return bl.appBarHeight + bl.mainContentAreaTopSpacing;
+
+
+    },
+    permittedToolbars() {
+
+      const isItemPermitted = item => {
+
+        if (item.permissions) {
+          if (!this.$hasAccesses(item.permissions)) {
+            return false;
+          }
+        }
+
+        if (item.anyPermissions) {
+          if (!item.anyPermissions.some(it => this.$hasAccesses([it]))) {
+            return false;
+          }
+        }
+
+        return true;
+
+      };
+
+      return this.toolbars.map(bar => {
+        if (!isItemPermitted(bar)) return undefined;
+
+        return {
+          ...bar,
+          children: bar.children?.filter(isItemPermitted)
+        };
+
+      }).filter(Boolean);
+
+    }
+  },
+  watch: {
+    '$route'() {
+      setTimeout(() => this.code = Math.random(), 20);
+    }
+  },
+  async beforeMount() {
+
+    if (!this.$token && Config.auth.isAuthMandatory) {
+      this.$router.replace('/auth', () => {});
+      return;
+    }
+
+    if (!this.toolbars.find(it => it.children?.some(i => i.path === this.$route.path)) && this.toolbars[0]?.children?.[0]) {
+      this.$router.replace(this.toolbars[0].children[0].path, () => {});
+    }
+
+    if (Config.socket.enabled && (!Config.socket.needsAuthentication || this.$token)) {
+      this.$socket.client.connect();
+    }
+
+    if (this.$token) {
+      if (Config.auth.refreshIdentityOnLoad) {
+        this.loading = true;
+        await this.loadData();
+        this.loading = false;
+      }
+      else {
+        try {
+          this.$root.$user = JSON.parse(localStorage.getItem('--user--') || '---');
+        }
+        catch {
+          this.$toast.error('Could not load your profile info.');
+          this.$root.logout(Config.auth.isAuthMandatory);
+        }
+      }
+    }
+
+  },
+  mounted() {
+    setTimeout(() => this.code = Math.random(), 20);
+  },
+  sockets: {
+    connect() {
+      if (Config.socket.needsAuthentication) {
+        this.$socket.client.emit('authenticate', { token: this.$token });
+      }
+    },
+    authenticated() {
+    //   this.$socket.client.emit('subscribe', 'Resource.User.*');
+    },
+    // 'Resource.User.*'(...data) {
+    //
+    // }
+  },
+  methods: {
+    async loadData() {
+      const identityApi = await AuthService.getIdentity();
+      if (identityApi.status !== 200) return this.onLoadDataError();
+      this.$root.user = identityApi.data;
+    },
+    async onLoadDataError() {
+      this.$toast.error('There was a problem getting your info.');
+      this.$root.logout(Config.auth.isAuthMandatory);
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  .main-base {
+    background: #EAEAEA;
+    .loading-container {
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+    }
+    &:not(.sidebar) {
+      min-height: 100%;
+    }
+    &.sidebar {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      max-height: 100%;
+      .main-sidebar {
+        flex-grow: 0;
+        flex-shrink: 0;
+      }
+      .main-content {
+        height: 100%;
+        max-height: 100%;
+        overflow-y: auto;
+      }
+    }
+  }
+</style>

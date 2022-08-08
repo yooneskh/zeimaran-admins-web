@@ -1,0 +1,63 @@
+html {
+  overflow-y: unset;
+}
+
+.v-application--is-rtl {
+  @import "./rtl.scss";
+}
+
+.ltred {
+  direction: ltr;
+}
+
+.rtled {
+  direction: rtl;
+}
+
+// rtlize snackbar here because it is out of main app directive
+.v-application--is-rtl ~ .vts.v-snack .vts__message {
+  margin-right: unset;
+  margin-left: auto;
+  font-family: iryekan;
+  direction: rtl;
+}
+
+.no-scrollbar {
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    width: 0 !important
+  }
+}
+
+.v-img--darken > .v-image__image {
+  filter: brightness(70%);
+}
+
+.slide-from-up-enter-active, .slide-from-up-leave-active {
+  transition: all 0.2s ease-out;
+  backface-visibility: hidden;
+}
+
+.slide-from-up-enter, .slide-from-up-leave-to {
+  height: 0;
+  opacity: 0;
+}
+
+.slide-from-up-enter-to, .slide-from-up-leave {
+  height: 20px;
+  opacity: 1;
+}
+
+.v-text-field.v-text-field--enclosed .v-text-field__details {
+  margin-bottom: 0;
+}
+
+.v-dialog > .v-card > .v-card__actions {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.leaflet-container {
+  z-index: 1 !important;
+}
