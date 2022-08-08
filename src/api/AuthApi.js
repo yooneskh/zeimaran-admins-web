@@ -5,12 +5,12 @@ export const AuthService = {
   getCaptcha() {
     return YNetwork.get(`${ENDPOINT_BASE}/captcha-tokens/generate/new`);
   },
-  login(email, captchaId, captchaText) {
+  login(phoneNumber, captchaId, captchaText) {
     return YNetwork.post(
       `${ENDPOINT_BASE}/authentication/login`,
       {
-        provider: 'email',
-        email
+        provider: 'phoneNumber',
+        phoneNumber
       },
       {
         'captcha-id': captchaId,
@@ -18,12 +18,12 @@ export const AuthService = {
       }
     );
   },
-  register(email, name, captchaId, captchaText) {
+  register(phoneNumber, name, captchaId, captchaText) {
     return YNetwork.post(
       `${ENDPOINT_BASE}/authentication/register`,
       {
-        provider: 'email',
-        email,
+        provider: 'phoneNumber',
+        phoneNumber,
         name
       },
       {

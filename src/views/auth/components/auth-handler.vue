@@ -12,7 +12,7 @@
           :target="info"
           :fields="[
             {
-              key: 'email', type: 'text', title: 'ایمیل',
+              key: 'phoneNumber', type: 'text', title: 'شماره تلفن',
               dir: 'ltr'
             }
           ]"
@@ -61,7 +61,7 @@
       <v-btn
         v-if="mode === 'login'"
         large block depressed color="primary"
-        :disabled="!info.email || !isEmailValid || !captchaText"
+        :disabled="!info.phoneNumber || !isPhoneNumberValid || !captchaText"
         :loading="loading"
         @click="doLogin">
         ورود
@@ -93,7 +93,7 @@ export default {
     loading: false,
     mode: 'login',
     info: {
-      email: '',
+      phoneNumber: '',
       name: '',
       verificationCode: '',
     },
@@ -101,8 +101,8 @@ export default {
     verificationToken: ''
   }),
   computed: {
-    isEmailValid() {
-      return /.+@.+\..+/.test(this.info.email);
+    isPhoneNumberValid() {
+      return /09[0-9]{9}/.test(this.info.phoneNumber);
     },
   },
   asyncComputed: {
@@ -130,7 +130,7 @@ export default {
     async doLogin() {
 
       this.loading = true;
-      const { status, data } = await AuthService.login(this.info.email, this.captcha.captchaId, this.captchaText);
+      const { status, data } = await AuthService.login(this.info.phoneNumber, this.captcha.captchaId, this.captchaText);
       this.loading = false;
 
       if (this.$generalHandle(status, data)) {
