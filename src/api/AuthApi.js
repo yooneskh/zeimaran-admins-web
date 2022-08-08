@@ -34,7 +34,7 @@ export const AuthService = {
   },
   verify(verificationToken, verificationCode) {
     return YNetwork.post(`${ENDPOINT_BASE}/authentication/verify`, {
-      provider: 'email',
+      provider: 'phoneNumber',
       verificationToken,
       verificationCode
     });
