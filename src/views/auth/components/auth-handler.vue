@@ -130,7 +130,7 @@ export default {
     async doLogin() {
 
       this.loading = true;
-      const { status, data } = await AuthService.login(this.info.phoneNumber, this.captcha.captchaId, this.captchaText);
+      const { status, data } = await AuthService.login('+98' + this.info.phoneNumber.slice(1), this.captcha.captchaId, this.captchaText);
       this.loading = false;
 
       if (this.$generalHandle(status, data)) {
