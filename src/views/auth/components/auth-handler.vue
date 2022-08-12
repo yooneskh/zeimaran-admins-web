@@ -19,7 +19,7 @@
           @keyup.enter.native="doLogin"
         />
 
-        <div v-html="captcha.svg" class="mt-3 mx-auto text-center" />
+        <div v-html="captcha.svg" class="mt-3 mb-1 mx-auto text-center" style="width: 185px;"/>
 
         <v-text-field
           filled hide-details
