@@ -102,6 +102,33 @@ export default new Router({
             model: 'Factor'
           }
         },
+        {
+          path: 'accounts',
+          component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
+          meta: {
+            title: 'مدیریت حساب‌ها',
+            icon: 'mdi-bank',
+            model: 'Account'
+          }
+        },
+        {
+          path: 'transfers',
+          component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
+          meta: {
+            title: 'مدیریت انتقال‌ها',
+            icon: 'mdi-bank-transfer',
+            model: 'Transfer'
+          }
+        },
+        {
+          path: 'transactions',
+          component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
+          meta: {
+            title: 'مدیریت تراکنش‌ها',
+            icon: 'mdi-bank-check',
+            model: 'Transaction'
+          }
+        },
 
       ]
     },

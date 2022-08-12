@@ -62,6 +62,9 @@ export default {
         { title: 'بلیط‌های ورود', icon: 'mdi-ticket', path: '/authorization-tokens', permissions: ['admin.authorization-token.list'] },
         { title: 'سطوح دسترسی', icon: 'mdi-ticket', path: '/authorization-roles', permissions: ['admin.authorization-role.list'] },
         { title: 'فاکتورها', icon: 'mdi-cash', path: '/factors', permissions: ['admin.factor.list'] },
+        { title: 'حساب‌ها', icon: 'mdi-bank', path: '/accounts', permissions: ['admin.account.list'] },
+        { title: 'انتقال‌ها', icon: 'mdi-bank-transfer', path: '/transfers', permissions: ['admin.transfers.list'] },
+        { title: 'تراکنش‌ها', icon: 'mdi-bank-check', path: '/transactions', permissions: ['admin.transactions.list'] },
       ]}
     ]
   }),
