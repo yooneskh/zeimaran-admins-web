@@ -58,6 +58,15 @@ export default new Router({
           }
         },
         {
+          path: 'live-registrations',
+          component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
+          meta: {
+            title: 'مدیریت ثبت‌نام‌های لایو',
+            icon: 'mdi-play',
+            model: 'LiveRegistration'
+          }
+        },
+        {
           path: 'users',
           component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
           meta: {
@@ -83,7 +92,16 @@ export default new Router({
             icon: 'mdi-ticket',
             model: 'AuthorizationRole'
           }
-        }
+        },
+        {
+          path: 'factors',
+          component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
+          meta: {
+            title: 'مدیریت فاکتورها',
+            icon: 'mdi-cash',
+            model: 'Factor'
+          }
+        },
 
       ]
     },

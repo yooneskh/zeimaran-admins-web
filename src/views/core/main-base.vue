@@ -57,9 +57,11 @@ export default {
     toolbars: [
       { groupTitle: 'Management', groupIcon: 'mdi-office-building-cog' , children: [
         { title: 'تنظیمات ثبت‌نام لایو', icon: 'mdi-cog-play', path: '/settings/live-registration' },
+        { title: 'ثبت نام های لایو', icon: 'mdi-play', path: '/live-registrations', permissions: ['admin.live-registration.list'] },
         { title: 'کاربران', icon: 'mdi-account', path: '/users', permissions: ['admin.user.list'] },
         { title: 'بلیط‌های ورود', icon: 'mdi-ticket', path: '/authorization-tokens', permissions: ['admin.authorization-token.list'] },
-        { title: 'سطوح دسترسی', icon: 'mdi-ticket', path: '/authorization-roles', permissions: ['admin.authorization-role.list'] }
+        { title: 'سطوح دسترسی', icon: 'mdi-ticket', path: '/authorization-roles', permissions: ['admin.authorization-role.list'] },
+        { title: 'فاکتورها', icon: 'mdi-cash', path: '/factors', permissions: ['admin.factor.list'] },
       ]}
     ]
   }),
