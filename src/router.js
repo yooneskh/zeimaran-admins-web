@@ -120,15 +120,6 @@ export default new Router({
             model: 'Transfer'
           }
         },
-        {
-          path: 'transactions',
-          component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
-          meta: {
-            title: 'مدیریت تراکنش‌ها',
-            icon: 'mdi-bank-check',
-            model: 'Transaction'
-          }
-        },
 
       ]
     },

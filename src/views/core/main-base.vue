@@ -64,7 +64,6 @@ export default {
         { title: 'فاکتورها', icon: 'mdi-cash', path: '/factors', permissions: ['admin.factor.list'] },
         { title: 'حساب‌ها', icon: 'mdi-bank', path: '/accounts', permissions: ['admin.account.list'] },
         { title: 'انتقال‌ها', icon: 'mdi-bank-transfer', path: '/transfers', permissions: ['admin.transfers.list'] },
-        { title: 'تراکنش‌ها', icon: 'mdi-bank-check', path: '/transactions', permissions: ['admin.transactions.list'] },
       ]}
     ]
   }),
