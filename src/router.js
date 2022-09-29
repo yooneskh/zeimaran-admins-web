@@ -58,6 +58,15 @@ export default new Router({
           }
         },
         {
+          path: 'live-sessions',
+          component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
+          meta: {
+            title: 'مدیریت دوره‌های لایو',
+            icon: 'mdi-list-box',
+            model: 'LiveSession'
+          }
+        },
+        {
           path: 'live-registrations',
           component: () => import('./views/manage/manage-resource-page.vue' /* webpackChunkName: 'manage-resource-page' */),
           meta: {
